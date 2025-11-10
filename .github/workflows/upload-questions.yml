@@ -48,11 +48,11 @@ jobs:
       
       - name: Upload questions (EGE - Math Profile)
         if: |
-          (contains(github.event.head_commit.message, 'ege') || 
-           github.event_name == 'workflow_dispatch') &&
-          (github.event.inputs.subject == 'math_ege_profil' || 
-           github.event.inputs.subject == 'all' || 
-           github.event.inputs.subject == '')
+          (github.event_name == 'push' || 
+           (github.event_name == 'workflow_dispatch' && 
+            (github.event.inputs.subject == 'math_ege_profil' || 
+             github.event.inputs.subject == 'all' || 
+             github.event.inputs.subject == '')))
         run: |
           if [ -f "data/questions/ege_questions.json" ]; then
             python scripts/upload_to_firestore.py \
@@ -80,11 +80,11 @@ jobs:
       
       - name: Upload questions (OGE - Math)
         if: |
-          (contains(github.event.head_commit.message, 'oge') || 
-           github.event_name == 'workflow_dispatch') &&
-          (github.event.inputs.subject == 'math_oge' || 
-           github.event.inputs.subject == 'all' || 
-           github.event.inputs.subject == '')
+          (github.event_name == 'push' || 
+           (github.event_name == 'workflow_dispatch' && 
+            (github.event.inputs.subject == 'math_oge' || 
+             github.event.inputs.subject == 'all' || 
+             github.event.inputs.subject == '')))
         run: |
           if [ -f "data/questions/oge_questions.json" ]; then
             python scripts/upload_to_firestore.py \
