@@ -1,0 +1,17 @@
+[
+  {
+    "id": "OGETEST001",
+    "guid": null,
+    "hint": "Впишите правильный ответ.",
+    "codifier": ["Тест ОГЭ"],
+    "question": "Сколько будет 3 × 3?",
+    "problem": "",
+    "img": [],
+    "imgUrls": [],
+    "audioUrls": [],
+    "numberInGroup": "",
+    "answerType": "Краткий ответ",
+    "answer": "9"
+  }
+]
+
