@@ -1,0 +1,148 @@
+name: Upload Questions to Firestore
+
+on:
+  push:
+    branches: [ main, master ]
+    paths:
+      - 'data/questions/**'
+      - 'scripts/upload_to_firestore.py'
+  workflow_dispatch:  # Позволяет запускать вручную
+    inputs:
+      subject:
+        description: 'Subject code to upload'
+        required: false
+        type: choice
+        options:
+          - math_ege_profil
+          - math_ege_base
+          - math_oge
+          - eng_ege
+          - eng_oge
+          - all
+      json_file:
+        description: 'JSON file path (relative to data/questions/)'
+        required: false
+        type: string
+
+jobs:
+  upload:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      
+      - name: Install dependencies
+        run: |
+          pip install firebase-admin
+      
+      - name: Create service account key file
+        env:
+          SERVICE_ACCOUNT_KEY: ${{ secrets.SERVICE_ACCOUNT_KEY }}
+        run: |
+          echo "$SERVICE_ACCOUNT_KEY" > serviceAccountKey.json
+      
+      - name: Upload questions (EGE - Math Profile)
+        if: |
+          (contains(github.event.head_commit.message, 'ege') || 
+           github.event_name == 'workflow_dispatch') &&
+          (github.event.inputs.subject == 'math_ege_profil' || 
+           github.event.inputs.subject == 'all' || 
+           github.event.inputs.subject == '')
+        run: |
+          if [ -f "data/questions/ege_questions.json" ]; then
+            python scripts/upload_to_firestore.py \
+              --json data/questions/ege_questions.json \
+              --subject math_ege_profil \
+              --credentials serviceAccountKey.json
+          else
+            echo "⚠️ File data/questions/ege_questions.json not found, skipping..."
+          fi
+      
+      - name: Upload questions (EGE - Math Base)
+        if: |
+          github.event_name == 'workflow_dispatch' &&
+          (github.event.inputs.subject == 'math_ege_base' || 
+           github.event.inputs.subject == 'all')
+        run: |
+          if [ -f "data/questions/ege_base_questions.json" ]; then
+            python scripts/upload_to_firestore.py \
+              --json data/questions/ege_base_questions.json \
+              --subject math_ege_base \
+              --credentials serviceAccountKey.json
+          else
+            echo "⚠️ File data/questions/ege_base_questions.json not found, skipping..."
+          fi
+      
+      - name: Upload questions (OGE - Math)
+        if: |
+          (contains(github.event.head_commit.message, 'oge') || 
+           github.event_name == 'workflow_dispatch') &&
+          (github.event.inputs.subject == 'math_oge' || 
+           github.event.inputs.subject == 'all' || 
+           github.event.inputs.subject == '')
+        run: |
+          if [ -f "data/questions/oge_questions.json" ]; then
+            python scripts/upload_to_firestore.py \
+              --json data/questions/oge_questions.json \
+              --subject math_oge \
+              --credentials serviceAccountKey.json
+          else
+            echo "⚠️ File data/questions/oge_questions.json not found, skipping..."
+          fi
+      
+      - name: Upload questions (EGE - English)
+        if: |
+          github.event_name == 'workflow_dispatch' &&
+          (github.event.inputs.subject == 'eng_ege' || 
+           github.event.inputs.subject == 'all')
+        run: |
+          if [ -f "data/questions/eng_ege_questions.json" ]; then
+            python scripts/upload_to_firestore.py \
+              --json data/questions/eng_ege_questions.json \
+              --subject eng_ege \
+              --credentials serviceAccountKey.json
+          else
+            echo "⚠️ File data/questions/eng_ege_questions.json not found, skipping..."
+          fi
+      
+      - name: Upload questions (OGE - English)
+        if: |
+          github.event_name == 'workflow_dispatch' &&
+          (github.event.inputs.subject == 'eng_oge' || 
+           github.event.inputs.subject == 'all')
+        run: |
+          if [ -f "data/questions/eng_oge_questions.json" ]; then
+            python scripts/upload_to_firestore.py \
+              --json data/questions/eng_oge_questions.json \
+              --subject eng_oge \
+              --credentials serviceAccountKey.json
+          else
+            echo "⚠️ File data/questions/eng_oge_questions.json not found, skipping..."
+          fi
+      
+      - name: Upload custom file
+        if: |
+          github.event_name == 'workflow_dispatch' &&
+          github.event.inputs.json_file != ''
+        run: |
+          JSON_FILE="data/questions/${{ github.event.inputs.json_file }}"
+          if [ -f "$JSON_FILE" ]; then
+            python scripts/upload_to_firestore.py \
+              --json "$JSON_FILE" \
+              --subject ${{ github.event.inputs.subject }} \
+              --credentials serviceAccountKey.json
+          else
+            echo "❌ File $JSON_FILE not found!"
+            exit 1
+          fi
+      
+      - name: Cleanup
+        if: always()
+        run: |
+          rm -f serviceAccountKey.json
+

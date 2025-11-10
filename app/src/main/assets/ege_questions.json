@@ -1,0 +1,31 @@
+[
+  {
+    "id": "TEST001",
+    "guid": null,
+    "hint": "Впишите правильный ответ.",
+    "codifier": ["Тест"],
+    "question": "Сколько будет 2 + 2?",
+    "problem": "",
+    "img": [],
+    "imgUrls": [],
+    "audioUrls": [],
+    "numberInGroup": "",
+    "answerType": "Краткий ответ",
+    "answer": "4"
+  },
+  {
+    "id": "TEST002",
+    "guid": null,
+    "hint": "Выберите правильный ответ.",
+    "codifier": ["Тест"],
+    "question": "Какое число больше: 5 или 3?",
+    "problem": "<div><p>Варианты ответа:</p><ul><li>А) 3</li><li>Б) 5</li><li>В) Они равны</li></ul></div>",
+    "img": [],
+    "imgUrls": [],
+    "audioUrls": [],
+    "numberInGroup": "",
+    "answerType": "Единичный выбор",
+    "answer": "Б"
+  }
+]
+

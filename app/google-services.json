@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "17320159553",
+    "project_id": "egog-771fc",
+    "storage_bucket": "egog-771fc.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:17320159553:android:670e93acd2f7840c2e99c0",
+          "android_client_info": {
+            "package_name": "com.example.egog"
+          }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCpynyT6WJaRG7l8yifs62PF78Rou5Lv4Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
+

@@ -1,0 +1,11 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Коллекция вопросов - разрешаем чтение всем, запись только через Cloud Functions
+    match /questions/{document} {
+      allow read: if true;  // Разрешить чтение всем
+      allow write: if false; // Запретить запись через клиент (только через Cloud Functions)
+    }
+  }
+}
+
